@@ -1,7 +1,19 @@
 from kubernetes import client, config
+from kubernetes.config.config_exception import ConfigException
 import subprocess
 
-config.load_kube_config()
+# config.load_kube_config()
+
+# config.load_incluster_config()
+
+try:
+    # If running inside Kubernetes
+    config.load_incluster_config()
+    print("Loaded in-cluster config")
+except ConfigException:
+    # If running locally
+    config.load_kube_config()
+    print("Loaded local kube config")
 
 v1=client.CoreV1Api()
 
