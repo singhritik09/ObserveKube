@@ -8,16 +8,20 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth .views import LoginView,LogoutView
 from forms import SignupForm
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
+class HomeView(LoginRequiredMixin,View):
+    
+    login_url=reverse_lazy('login')
+    def get(self,request):    
+        template="home.html"
+        context={}
+        return render(request,template,{})
 
-class HomeView(View):
-    template="home.html"
-        # context={}
-        # return render(request,template,context)
-    def get(self,request):
-        return render(request,self.template)
-class StatusView(View):
+class StatusView(LoginRequiredMixin,View):
+    login_url=reverse_lazy('login')
     def get(self,request):    
         return HttpResponse("Status is OK")
     
