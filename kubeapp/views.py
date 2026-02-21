@@ -11,7 +11,7 @@ from forms import SignupForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-from kube_main import overall_dashboard
+from kube_main import overall_dashboard,get_logs
 
 class HomeView(LoginRequiredMixin,View):
     
@@ -25,7 +25,7 @@ class StatusView(LoginRequiredMixin,View):
     login_url=reverse_lazy('login')
     def get(self,request):    
         
-        running_pods,issue_pods,totalpods,issue_pod_logs = overall_dashboard()
+        running_pods,issue_pods,totalpods,issue_pod_logs,get_all_services = overall_dashboard()
 
         running_percent = (len(running_pods) * 100.0) / totalpods if totalpods else 0
         issue_percent = (len(issue_pods) * 100.0) / totalpods if totalpods else 0
@@ -34,13 +34,29 @@ class StatusView(LoginRequiredMixin,View):
             'issue_pods': issue_pods,
             'totalpods': totalpods,
             'issue_pod_logs': issue_pod_logs,
+            'running_services': get_all_services,
             'running_percent': running_percent,
-            'issue_percent': issue_percent
+            'issue_percent': issue_percent,
         }
 
         template="status.html"
         return render(request,template,context)        
+
+
+class PodLogsView(LoginRequiredMixin,View):
+    login_url=reverse_lazy('login')
     
+    
+    def get(self,request,pod_name):    
+    
+        pod_description=get_logs(pod_name)
+        template="pod_logs.html"
+        context={
+            'pod_name': pod_name,
+            'pod_description': pod_description        
+            }
+        
+        return render(request,template,context=context)
 
 class SignUpView(CreateView):
     form_class=SignupForm

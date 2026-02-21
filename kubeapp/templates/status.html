@@ -93,7 +93,9 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
                         {% for pod in running_pods %}
-                            <li class="list-group-item">{{ pod }}</li>
+                            <li class="list-group-item">
+                                <a href="{% url 'pod_logs' pod_name=pod %}">{{ pod }}</a>
+                            </li>
                         {% empty %}
                             <li class="list-group-item text-muted">
                                 No running pods found
@@ -113,7 +115,7 @@
                     <ul class="list-group list-group-flush">
                         {% for pod in issue_pods %}
                             <li class="list-group-item text-danger">
-                                {{ pod }}
+                                <a href="{% url 'pod_logs' pod_name=pod %}">{{ pod }}</a>
                             </li>
                         {% empty %}
                             <li class="list-group-item text-muted">
@@ -126,24 +128,32 @@
         </div>
 
     </div>
+<div class="row">
 
-    <!-- LOGS SECTION -->
-    {% if issue_pod_logs %}
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-dark text-white">
-            📄 Issue Pod Logs
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-success text-white">
+                    Services
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for service in running_services %}
+                            <li class="list-group-item">{{ service.metadata.name }}
+                                <div>
+                                    {{service.spec.type}}
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-muted">
+                                No running services found
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-            <pre class="bg-light p-3 rounded"
-                 style="max-height: 400px; overflow-y: auto;">
-{{ issue_pod_logs }}
-            </pre>
-        </div>
+
     </div>
-    {% endif %}
-
-</div>
-
 <!-- PIE CHART SCRIPT -->
 <script>
     const ctx = document.getElementById('podPieChart').getContext('2d');
