@@ -25,6 +25,7 @@ jobs:
       run: docker push '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
 
   test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
