@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}Network Dashboard{% endblock %}
+
+{% block content %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white text-center">
+                📊 Pod Distribution Overview
+            </div>
+            <div class="card-body">
+                <canvas id="podPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('podPieChart').getContext('2d');
+
+    const podPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Running Pods', 'Issue Pods'],
+            datasets: [{
+                data: [{{ running_count }}, {{ issue_count }}],
+                backgroundColor: [
+                    '#28a745',  // Green
+                    '#dc3545'   // Red
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+<!-- Add Bootstrap if not already added in base.html -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">🚀 Network Traffic Dashboard</h1>
+        <p class="text-muted">Real-time Cluster Monitoring</p>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Total Pods</h5>
+                    <h2 class="fw-bold">{{ totalpods }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Running Pods</h5>
+                    <h2 class="fw-bold">{{ running_pods|length }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Issue Pods</h5>
+                    <h2 class="fw-bold">{{ issue_pods|length }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-5">
+        <h4 class="mb-3">Cluster Health Overview</h4>
+        <div class="progress" style="height: 30px;">
+            <div class="progress-bar bg-success"
+                 role="progressbar"
+                 style="width: {{ running_pods|length|floatformat:0|add:'0' }}%;"
+                 aria-valuenow="{{ running_pods|length }}"
+                 aria-valuemin="0"
+                 aria-valuemax="{{ totalpods }}">
+                 Running
+            </div>
+            <div class="progress-bar bg-danger"
+                 role="progressbar"
+                 style="width: {{ issue_pods|length|floatformat:0|add:'0' }}%;"
+                 aria-valuenow="{{ issue_pods|length }}"
+                 aria-valuemin="0"
+                 aria-valuemax="{{ totalpods }}">
+                 Issues
+            </div>
+        </div>
+    </div>
+
+    <!-- Pod Lists -->
+    <div class="row">
+
+        <!-- Running Pods -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-success text-white">
+                    ✅ Running Pods
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for pod in running_pods %}
+                            <li class="list-group-item">
+                                {{ pod }}
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-muted">
+                                No running pods found
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Issue Pods -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-danger text-white">
+                    ❌ Issue Pods
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for pod in issue_pods %}
+                            <li class="list-group-item text-danger">
+                                {{ pod }}
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-muted">
+                                No issue pods 🎉
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Logs Section -->
+    {% if issue_pod_logs %}
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white">
+            📄 Issue Pod Logs
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">
+{{ issue_pod_logs }}
+            </pre>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

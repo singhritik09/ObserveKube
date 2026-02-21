@@ -27,12 +27,19 @@ class StatusView(LoginRequiredMixin,View):
         
         running_pods,issue_pods,totalpods,issue_pod_logs = overall_dashboard()
 
-        return JsonResponse({
+        running_percent = (len(running_pods) * 100.0) / totalpods if totalpods else 0
+        issue_percent = (len(issue_pods) * 100.0) / totalpods if totalpods else 0
+        context={
             'running_pods': running_pods,
             'issue_pods': issue_pods,
             'totalpods': totalpods,
-            'issue_pod_logs': issue_pod_logs
-        })        
+            'issue_pod_logs': issue_pod_logs,
+            'running_percent': running_percent,
+            'issue_percent': issue_percent
+        }
+
+        template="status.html"
+        return render(request,template,context)        
     
 
 class SignUpView(CreateView):
