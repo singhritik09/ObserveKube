@@ -22,7 +22,7 @@ class HomeView(LoginRequiredMixin,View):
         return render(request,template,{})
 
 class StatusView(LoginRequiredMixin,View):
-    # login_url=reverse_lazy('login')
+    login_url=reverse_lazy('login')
     def get(self,request):    
         
         running_pods,issue_pods,totalpods,issue_pod_logs = overall_dashboard()

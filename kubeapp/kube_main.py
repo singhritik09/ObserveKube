@@ -47,7 +47,7 @@ def get_logs(pod_name):
 def issue_pod_logs(arr):
     
     for pod in arr:
-        print("Getting logs for pod %s" % pod)
+        # print("Getting logs for pod %s" % pod)
         get_logs(pod)
     
     return "Logs fetched for all issue pods"
@@ -70,5 +70,4 @@ if __name__=="__main__":
     totalpods=len(running_pods)+len(issue_pods)
     
     
-    print("Total pods: %d" % totalpods)
     
