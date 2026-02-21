@@ -18,6 +18,15 @@ except ConfigException:
 v1=client.CoreV1Api()
 
 
+def get_namespaces():
+    ret=v1.list_namespace()
+    print("Listing namespaces:")
+    arr=[]
+    for i in ret.items:
+        print("%s" % i.metadata.name)
+        arr.append(i.metadata.name)
+        
+    return arr
 def get_pods():
     print("Listing pods with their IPs:")
     ret=v1.list_pod_for_all_namespaces(watch=False)
@@ -81,7 +90,6 @@ def issue_pod_logs(arr):
 def overall_dashboard():
     running_pods,issue_pods=get_pods()
     issue_pod_logs(issue_pods)
-    
     totalpods=len(running_pods)+len(issue_pods)
     
     print("Total pods: %d" % totalpods)
@@ -91,9 +99,12 @@ def overall_dashboard():
 
 if __name__=="__main__":
     running_pods,issue_pods=get_pods()
-    issue_pod_logs(issue_pods)
+    # issue_pod_logs(issue_pods)
     
     totalpods=len(running_pods)+len(issue_pods)
     
-    
+    a=get_namespaces()
+    print(a)
+    # print("A: %s" % a)
+    # 
     

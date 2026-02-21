@@ -11,15 +11,17 @@ from forms import SignupForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-from kube_main import overall_dashboard,get_logs
+from kube_main import overall_dashboard,get_logs,get_namespaces
 
 class HomeView(LoginRequiredMixin,View):
     
     login_url=reverse_lazy('login')
     def get(self,request):    
         template="home.html"
-        context={}
-        return render(request,template,{})
+        namespaces=get_namespaces()
+        context={'namespaces':namespaces}
+        
+        return render(request,template,context)
 
 class StatusView(LoginRequiredMixin,View):
     login_url=reverse_lazy('login')
