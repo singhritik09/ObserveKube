@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 from django.views import View
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth .views import LoginView,LogoutView
@@ -11,6 +11,7 @@ from forms import SignupForm
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
+from kube_main import overall_dashboard
 
 class HomeView(LoginRequiredMixin,View):
     
@@ -21,9 +22,17 @@ class HomeView(LoginRequiredMixin,View):
         return render(request,template,{})
 
 class StatusView(LoginRequiredMixin,View):
-    login_url=reverse_lazy('login')
+    # login_url=reverse_lazy('login')
     def get(self,request):    
-        return HttpResponse("Status is OK")
+        
+        running_pods,issue_pods,totalpods,issue_pod_logs = overall_dashboard()
+
+        return JsonResponse({
+            'running_pods': running_pods,
+            'issue_pods': issue_pods,
+            'totalpods': totalpods,
+            'issue_pod_logs': issue_pod_logs
+        })        
     
 
 class SignUpView(CreateView):

@@ -51,7 +51,17 @@ def issue_pod_logs(arr):
         get_logs(pod)
     
     return "Logs fetched for all issue pods"
+
+def overall_dashboard():
+    running_pods,issue_pods=get_pods()
+    issue_pod_logs(issue_pods)
     
+    totalpods=len(running_pods)+len(issue_pods)
+    
+    
+    print("Total pods: %d" % totalpods)
+
+    return running_pods,issue_pods,totalpods,issue_pod_logs(issue_pods)
 
 if __name__=="__main__":
     running_pods,issue_pods=get_pods()
@@ -61,5 +71,4 @@ if __name__=="__main__":
     
     
     print("Total pods: %d" % totalpods)
-    
     
