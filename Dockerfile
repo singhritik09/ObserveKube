@@ -9,5 +9,5 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel \
 
 COPY . .
 
-EXPOSE 9000
-CMD ["gunicorn", "--bind", "0.0.0.0:9000", "kubedashboard.wsgi:application"]
+EXPOSE 8000
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "kubedashboard.wsgi:application"]
