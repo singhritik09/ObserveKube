@@ -4,14 +4,20 @@
 
 {% block content %}
 <div class="text-center">
-    <h1 class="display-5">Network Traffic Dashboard</h1>
-    <p class="lead">Django + Bootstrap is working!</p>
+    <h1 class="display-5">Cluster Dashboard</h1>
 
     <a href="/status/" class="btn btn-success">
         Check Status
     </a>
-    {% for namespace in namespaces %}
-        <li class="list-group-item">{{ namespace }}</li>
+<form method="get" action="{% url 'status' %}">
+    <select name="namespace" class="form-select">
+        {% for ns in namespaces %}
+            <option value="{{ ns }}">{{ ns }}</option>
         {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary mt-2">
+        Check Pods
+    </button>
+</form>
 </div>
 {% endblock %}
