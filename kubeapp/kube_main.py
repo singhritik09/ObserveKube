@@ -60,10 +60,10 @@ def get_all_deployments():
     print("Services: %s" % services)
     return services
 
-def get_all_services():
+def get_all_services(namespace):
     print("Listing Services:")
     
-    ret=v1.list_namespaced_service("default")
+    ret=v1.list_namespaced_service(namespace)
         
     return ret.items
 
@@ -86,8 +86,8 @@ def overall_dashboard(namespace):
     totalpods=len(running_pods)+len(issue_pods)
     
     print("Total pods: %d" % totalpods)
-    get_all_services()
-    return running_pods,issue_pods,totalpods,issue_pod_logs(issue_pods),get_all_services()
+    # get_all_services(namespace)
+    return running_pods,issue_pods,totalpods,issue_pod_logs(issue_pods),get_all_services(namespace)
 
 
 if __name__=="__main__":
