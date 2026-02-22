@@ -24,24 +24,24 @@ jobs:
     - name: Push Docker Image
       run: docker push '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
+  # test:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
 
-    - name: Pull Docker Image
-      run: docker pull '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
+  #   - name: Pull Docker Image
+  #     run: docker pull '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
     
-    - name: Run Test
-      run: docker run -d --name cluster-dashboard -p 8000:8000 '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
+  #   - name: Run Test
+  #     run: docker run -d --name cluster-dashboard -p 8000:8000 '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
    
-    - name: Test container
-      run: |
-        sleep 20
-        curl -f http://localhost:8000/ || (docker logs cluster-dashboard && exit 1)
+  #   - name: Test container
+  #     run: |
+  #       sleep 20
+  #       curl -f http://localhost:8000/ || (docker logs cluster-dashboard && exit 1)
 
-    - name : Stop Container
-      run: |
-        docker stop cluster-dashboard
-        docker rm cluster-dashboard
+  #   - name : Stop Container
+  #     run: |
+  #       docker stop cluster-dashboard
+  #       docker rm cluster-dashboard

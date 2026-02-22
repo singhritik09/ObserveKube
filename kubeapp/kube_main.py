@@ -98,6 +98,3 @@ if __name__=="__main__":
     
     a=get_namespaces()
     print(a)
-    # print("A: %s" % a)
-    # 
-    
