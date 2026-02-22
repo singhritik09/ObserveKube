@@ -34,12 +34,12 @@ jobs:
       run: docker pull '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
     
     - name: Run Test
-      run: docker run -d --name cluster-dashboard -p 9000:9000 '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
+      run: docker run -d --name cluster-dashboard -p 8000:8000 '${{secrets.DOCKER_USERNAME}}'/cluster-dashboard:'${{github.sha}}'
    
     - name: Test container
       run: |
         sleep 20
-        curl -f http://localhost:9000/ || (docker logs cluster-dashboard && exit 1)
+        curl -f http://localhost:8000/ || (docker logs cluster-dashboard && exit 1)
 
     - name : Stop Container
       run: |
